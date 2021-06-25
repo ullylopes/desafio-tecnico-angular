@@ -21,18 +21,20 @@
   </thead>
 
   <tbody>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
+    <tr *ngFor="let data of dados">
+      <th>{{ data.name }}</th>
+      <th>{{ data.age }}</th>
+      <th>{{ data.occupation }}</th>
+      <th>{{ data.city }}</th>
+      <th>{{ data.weight }}</th>
+      <th>{{ data.birthday }}</th>
       <th>
-        <a [routerLink]="[12, 'edit']" class="btn btn-outline-info btn-sm"
+        <a [routerLink]="[data.id, 'edit']" class="btn btn-outline-info btn-sm"
           >Editar</a
         >
-        <a class="btn btn-outline-danger btn-sm">Apagar</a>
+        <button (click)="deleteData(data)" class="btn btn-outline-danger btn-sm"
+          >Apagar</button
+        >
       </th>
     </tr>
   </tbody>

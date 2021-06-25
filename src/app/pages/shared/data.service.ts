@@ -17,7 +17,7 @@ export class DataService {
   /* traz todos os dados */
   getAll(): Observable<Data[]> {
     return this.http
-      .get('this.apiPath')
+      .get(this.apiPath)
       .pipe(catchError(this.handleError), map(this.jsonDataToAllData));
   }
 

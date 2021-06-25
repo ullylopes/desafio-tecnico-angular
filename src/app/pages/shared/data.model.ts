@@ -1,10 +1,10 @@
 export class Data {
   constructor(
-    public id?: number,
+    public id?: string,
     public name?: string,
     public occupation?: string,
-    public weight?: number,
-    public age?: number,
+    public weight?: string,
+    public age?: string,
     public city?: string,
     public birthday?: string
   ) {}
