@@ -1,1 +1,39 @@
-<p>list works!</p>
+<h3 class="text-center mb-5 mt-5">Só Vamu Tech</h3>
+
+<div class="row mb-4">
+  <div class="col-md">PESQUISA AQUI</div>
+
+  <div class="col-md">
+    <a routerLink="new" class="btn btn-success">Cadastrar</a>
+  </div>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Idade</th>
+      <th>Profissão</th>
+      <th>Cidade de nascimento</th>
+      <th>Peso</th>
+      <th>Aniversário</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>
+        <a [routerLink]="[12, 'edit']" class="btn btn-outline-info btn-sm"
+          >Editar</a
+        >
+        <a class="btn btn-outline-danger btn-sm">Apagar</a>
+      </th>
+    </tr>
+  </tbody>
+</table>
