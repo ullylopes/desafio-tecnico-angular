@@ -18,9 +18,8 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./form.component.css'],
 })
 export class FormComponent implements OnInit, AfterContentChecked {
-
   form!: FormGroup;
-  submittingForm: false = false;
+  submittingForm: boolean = false;
   currentAction!: string;
   pageTitle!: string;
   serverErrorMessages: string[] = [];
@@ -45,6 +44,16 @@ export class FormComponent implements OnInit, AfterContentChecked {
     this.setPageTitle();
   }
 
+  onSubmit() {
+    this.submittingForm = true;
+
+    if (this.currentAction == 'new') {
+      this.createData();
+    } else {
+      this.updateData();
+    }
+  }
+
   /* define a ação do formulário */
   private setCurrentAction() {
     if (this.route.snapshot.url[0].path == 'new') {
@@ -61,7 +70,7 @@ export class FormComponent implements OnInit, AfterContentChecked {
       occupation: [null, [Validators.required, Validators.minLength(4)]],
       weight: [null, [Validators.required, Validators.minLength(2)]],
       age: [null, [Validators.required, Validators.minLength(2)]],
-      city: [null, [Validators.required, Validators.minLength(3)]],
+      city: [null, [Validators.required, Validators.minLength(2)]],
       birthday: [null, [Validators.required]],
     });
   }
@@ -70,7 +79,9 @@ export class FormComponent implements OnInit, AfterContentChecked {
     if (this.currentAction == 'edit') {
       this.route.paramMap
         .pipe(
-          switchMap((params: Params) => this.dataService.getById(+params.get("id")))
+          switchMap((params: Params) =>
+            this.dataService.getById(+params.get('id'))
+          )
         )
         .subscribe(
           (data) => {
@@ -89,5 +100,62 @@ export class FormComponent implements OnInit, AfterContentChecked {
       const dataName = this.data.name || '';
       this.pageTitle = 'Editando informações: ' + dataName;
     }
+  }
+
+  createData() {
+    const data: Data = Object.assign(new Data(), this.form.value);
+
+    this.dataService.create(data).subscribe(
+      (data) => this.actionsForSuccess(data),
+      (error) => this.actionsforError(error)
+    );
+  }
+
+  private updateData() {}
+
+  private actionsForSuccess(data: Data) {
+    alert('Solicitação processada com sucesso!');
+
+    this.router
+      .navigateByUrl('pages', { skipLocationChange: true })
+      .then(() => this.router.navigate(['pages', data.id, 'edit']));
+  }
+
+  private actionsforError(error: any) {
+    alert('Ocorreu um erro ao processar sua solicitação!');
+
+    this.submittingForm = false;
+
+    if (error.status === 422) {
+      this.serverErrorMessages = JSON.parse(error._body).errors;
+    } else {
+      this.serverErrorMessages = [
+        'Falha na comunicação com o servidor. Tente mais tarde!',
+      ];
+    }
+  }
+
+  get name(): FormControl {
+    return this.form.get('name') as FormControl;
+  }
+
+  get occupation(): FormControl {
+    return this.form.get('occupation') as FormControl;
+  }
+
+  get weight(): FormControl {
+    return this.form.get('weight') as FormControl;
+  }
+
+  get age(): FormControl {
+    return this.form.get('age') as FormControl;
+  }
+
+  get city(): FormControl {
+    return this.form.get('city') as FormControl;
+  }
+
+  get birthday(): FormControl {
+    return this.form.get('birthday') as FormControl;
   }
 }
