@@ -1,15 +1,93 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentChecked } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+
+import { Data } from '../shared/data.model';
+import { DataService } from '../shared/data.service';
+
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.css']
+  styleUrls: ['./form.component.css'],
 })
-export class FormComponent implements OnInit {
+export class FormComponent implements OnInit, AfterContentChecked {
 
-  constructor() { }
+  form!: FormGroup;
+  submittingForm: false = false;
+  currentAction!: string;
+  pageTitle!: string;
+  serverErrorMessages: string[] = [];
+
+  /* carregamento do objeto rastreado pelo currentAction */
+  data: Data = new Data();
+
+  constructor(
+    private dataService: DataService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
+    this.setCurrentAction();
+    this.buildDataForm();
+    this.loadData();
   }
 
+  ngAfterContentChecked() {
+    this.setPageTitle();
+  }
+
+  /* define a ação do formulário */
+  private setCurrentAction() {
+    if (this.route.snapshot.url[0].path == 'new') {
+      this.currentAction = 'new';
+    } else {
+      this.currentAction = 'edit';
+    }
+  }
+
+  private buildDataForm() {
+    this.form = this.formBuilder.group({
+      id: [null],
+      name: [null, [Validators.required, Validators.minLength(4)]],
+      occupation: [null, [Validators.required, Validators.minLength(4)]],
+      weight: [null, [Validators.required, Validators.minLength(2)]],
+      age: [null, [Validators.required, Validators.minLength(2)]],
+      city: [null, [Validators.required, Validators.minLength(3)]],
+      birthday: [null, [Validators.required]],
+    });
+  }
+
+  private loadData() {
+    if (this.currentAction == 'edit') {
+      this.route.paramMap
+        .pipe(
+          switchMap((params: Params) => this.dataService.getById(+params.get("id")))
+        )
+        .subscribe(
+          (data) => {
+            this.data = data;
+            this.form.patchValue(this.data);
+          },
+          (error) => alert('Ocorreu um erro no servidor, tente mais tarde!')
+        );
+    }
+  }
+
+  private setPageTitle() {
+    if (this.currentAction == 'new') {
+      this.pageTitle = 'Cadastro de usuário';
+    } else {
+      const dataName = this.data.name || '';
+      this.pageTitle = 'Editando informações: ' + dataName;
+    }
+  }
 }

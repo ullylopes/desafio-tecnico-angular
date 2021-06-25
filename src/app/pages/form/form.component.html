@@ -1,1 +1,33 @@
-<p>form works!</p>
+<h3 class="text-center mb-5 mt-5">Só Vamu Tech {{ currentAction }}</h3>
+
+<div class="container mt-5">
+  <form [formGroup]="form" class="d-flex justify-content-around">
+    <div class="d-flex flex-sm-column align-items-sm-center">
+      <label for="name">Nome</label>
+      <input type="text" formControlName="name" />
+      <label for="occupation">Profissão</label>
+      <input type="text" formControlName="occupation" />
+      <label for="weight">Peso</label>
+      <input type="text" formControlName="weight" />
+    </div>
+
+    <div class="d-flex flex-sm-column">
+      <label for="age">Idade</label>
+      <input type="text" formControlName="age" />
+      <label for="city">Cidade de Nascimento</label>
+      <input type="text" formControlName="city" />
+      <label for="birthday">Aniversário</label>
+      <input type="date" formControlName="birthday" />
+    </div>
+
+    <div class="align-self-end">
+      <a routerLink="/pages" class="btn btn-light">Voltar</a>
+      <button type="submit" [disabled]= "!form.valid" routerLink="/pages" class="btn btn-success">Salvar</button>
+    </div>
+
+    <!-- <div class="d-flex flex-sm-column">
+      <a class="btn btn-light" routerLink="/" type="">Voltar</a>
+      <button class="btn btn-success" routerLink="/">Salvar</button>
+    </div> -->
+  </form>
+</div>
