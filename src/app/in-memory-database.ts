@@ -1,4 +1,5 @@
 import { InMemoryDbService, InMemoryWebApiModule } from "angular-in-memory-web-api";
+import { Data } from "./pages/shared/data.model";
 
 export class InMemoryDataBase implements InMemoryDbService {
 
