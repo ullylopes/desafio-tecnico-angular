@@ -7,7 +7,7 @@ export class InMemoryDataBase implements InMemoryDbService {
 
     createDb() {
         /* banco de dados simulado */
-        const data = [
+        const data: Data[] = [
             {id: '1', name: 'Joao', age: '20', occupation: 'Estudante', city: 'SP', weight: '80', birthday: '' },
             {id: '2', name: 'Maria', age: '35', occupation: 'Motorista', city: 'MG', weight: '65', birthday: '' },
             {id: '3', name: 'Jorge', age: '70', occupation: 'Padeiro', city: 'SP', weight: '70', birthday: '' },
